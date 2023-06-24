@@ -1,0 +1,42 @@
+targetServer:
+  host: localhost
+  port: 8080
+services:
+  - name: users
+    methods:
+      - name: createUser
+        input:
+          address:
+            city: New York
+            country: USA
+            state: CA
+            street: 123 Main St
+            zip: "94105"
+          age: 30
+          email: XXXXXXXXXXXX
+          name: John Doe
+          password: XXXXXXXXXXXX
+          phone: XXXXXXXXXXXX
+          role: user
+          status: active
+      - name: getUser
+        input:
+          id: XXXXXXXXXXXX
+loadPattern:
+  type: ramp-up
+  concurrentUsers: 10
+  durationSeconds: 10s
+  rampUp:
+    durationSeconds: 10s
+  cooldown:
+    durationSeconds: 10s
+rateLimiting:
+  maxRequestsPerSecond: 10
+metadata:
+  environment: test
+  name: test
+  version: 1.0.0
+tls:
+  enabled: false
+  certFile: testdata/cert.pem
+  keyFile: testdata/key.pem

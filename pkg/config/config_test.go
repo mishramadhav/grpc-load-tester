@@ -17,7 +17,7 @@ func TestParseConfigFile(t *testing.T) {
 	}{
 		{
 			name:     "success",
-			filename: "testdata/valid.yaml",
+			filename: "../../testdata/pkg/schema/valid.yml",
 			want: Config{
 				TargetServer: TargetServer{
 					Host: "localhost",
@@ -83,6 +83,18 @@ func TestParseConfigFile(t *testing.T) {
 			wantErr: false,
 			errMsg:  "",
 		},
+		{
+			name:     "invalid file",
+			filename: "../../testdata/pkg/schema/invalid.yml",
+			wantErr:  true,
+			errMsg:   "error while parsing config file",
+		},
+		{
+			name:     "absent file",
+			filename: "absent.yml",
+			wantErr:  true,
+			errMsg:   "failed to read config file",
+		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -90,7 +102,7 @@ func TestParseConfigFile(t *testing.T) {
 
 			if tc.wantErr {
 				assert.Error(t, err)
-				assert.Equal(t, tc.errMsg, err.Error())
+				assert.Contains(t, err.Error(), tc.errMsg)
 				return
 			}
 

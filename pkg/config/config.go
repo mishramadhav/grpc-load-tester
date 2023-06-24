@@ -1,10 +1,11 @@
 package config
 
 import (
+	"errors"
 	"os"
 	"time"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -34,17 +35,17 @@ type Method struct {
 type LoadPattern struct {
 	Type            string        `yaml:"type"`
 	ConcurrentUsers int           `yaml:"concurrentUsers"`
-	Duration        time.Duration `yaml:"duration"`
+	Duration        time.Duration `yaml:"durationSeconds"`
 	RampUp          RampUp        `yaml:"rampUp,omitempty"`
 	Cooldown        Cooldown      `yaml:"cooldown,omitempty"`
 }
 
 type RampUp struct {
-	Duration time.Duration `yaml:"duration"`
+	Duration time.Duration `yaml:"durationSeconds"`
 }
 
 type Cooldown struct {
-	Duration time.Duration `yaml:"duration"`
+	Duration time.Duration `yaml:"durationSeconds"`
 }
 
 type RateLimiting struct {
@@ -62,12 +63,12 @@ func ParseConfigFile(filename string) (Config, error) {
 
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		return config, err
+		return config, errors.New("failed to read config file: " + err.Error())
 	}
 
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
-		return config, err
+		return config, errors.New("error while parsing config file: " + err.Error())
 	}
 
 	return config, nil
