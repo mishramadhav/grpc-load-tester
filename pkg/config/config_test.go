@@ -111,3 +111,10 @@ func TestParseConfigFile(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkParseConfigFile(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		filename := "../../testdata/pkg/schema/valid.yml"
+		ParseConfigFile(filename)
+	}
+}
